@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="PREDION — platform intelijen peluang dan risiko untuk founder dan UKM di Indonesia dan ASEAN.">
+<meta name="theme-color" content="#b8860b">
+<title>PREDION — Opportunity · Risk · Intelligence</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 2l12 14-12 14L4 16z' fill='%23b8860b'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+<style>
+:root{--bg:#fbf8f1;--sf:#fff;--tx:#1c1917;--mu:#6b6459;--bd:#eee6d4;--gold:#b8860b;--gl:#fdf3d6;--gr:#16803c;--rd:#b91c1c;--bl:#2563eb;--r:14px}
+[data-theme=dark]{--bg:#14110c;--sf:#1e1a13;--tx:#f5efe2;--mu:#b3a993;--bd:#3a3220;--gl:#33290f;--gold:#e0b04a}
+*{box-sizing:border-box;margin:0}
+body{font:14px/1.5 'Plus Jakarta Sans',system-ui,sans-serif;background:var(--bg);color:var(--tx)}
+button,input{font:inherit;color:inherit}button{cursor:pointer}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.sim{background:#fff4d6;color:#6b4a00;text-align:center;font-size:12px;font-weight:600;padding:5px 12px;border-bottom:1px solid #ecd48a}
+header{display:flex;align-items:center;gap:16px;padding:10px 24px;background:var(--sf);border-bottom:1px solid var(--bd);position:sticky;top:0;z-index:20}
+.logo{display:flex;align-items:center;gap:10px;min-width:200px}.logo b{font-size:22px;letter-spacing:.06em;font-weight:800}.logo small{display:block;font-size:11px;color:var(--mu)}
+.search{flex:1;max-width:460px;display:flex;align-items:center;gap:8px;border:1px solid var(--bd);border-radius:999px;padding:8px 16px;background:var(--bg)}
+.search input{border:0;background:none;flex:1;outline:0}
+.pill{border:1px solid var(--bd);border-radius:999px;padding:6px 14px;font-size:12px;font-weight:600;display:flex;gap:6px;align-items:center}
+.on{color:var(--gr)}.ic{background:none;border:1px solid var(--bd);border-radius:50%;width:38px;height:38px;position:relative;background:var(--sf)}
+.ic i{position:absolute;top:-4px;right:-4px;background:var(--rd);color:#fff;font:700 11px/16px sans-serif;width:18px;border-radius:9px;text-align:center}
+.me{display:flex;gap:10px;align-items:center;margin-left:auto}.av{width:38px;height:38px;border-radius:50%;background:var(--gold);color:#fff;display:grid;place-items:center;font-weight:700}
+#burger{display:none}
+.app{display:grid;grid-template-columns:232px 1fr}
+aside{padding:16px 12px;border-right:1px solid var(--bd);background:var(--sf);min-height:calc(100vh - 110px);display:flex;flex-direction:column;gap:2px}
+nav a{display:flex;gap:12px;align-items:center;padding:10px 12px;border-radius:10px;color:var(--mu);font-weight:500;text-decoration:none;width:100%;border:0;background:none;text-align:left}
+nav a[aria-current=page]{background:var(--gl);color:var(--tx);font-weight:700}nav a:hover{background:var(--gl)}
+nav span{width:20px;text-align:center;color:var(--gold);font-size:17px}
+.up{margin-top:auto;border:1px solid var(--bd);border-radius:var(--r);padding:16px;background:var(--bg)}
+.up p{font-size:12px;color:var(--mu);margin:6px 0 12px}
+.btn{background:var(--gold);color:#fff;border:0;border-radius:10px;padding:10px 16px;font-weight:700;width:100%}
+main{display:grid;grid-template-columns:1fr 330px;gap:20px;padding:20px 24px;align-items:start}
+.card{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:16px}
+.col{display:grid;gap:16px;min-width:0}.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.hero{padding:28px;background:linear-gradient(120deg,var(--gl),var(--sf) 70%)}
+.hero h1{font-size:34px;font-weight:800;line-height:1.15;margin:10px 0 4px}.hero h1 em{color:var(--gold);font-style:normal}
+.tag{display:inline-block;border:1px solid var(--bd);background:var(--sf);border-radius:999px;padding:3px 12px;font-size:12px;font-weight:600;color:var(--mu)}
+.ask{margin-top:20px;background:var(--sf);border:1px solid #e7cf8a;border-radius:var(--r);padding:14px}
+.ask input{width:100%;border:0;background:none;outline:0;padding:8px 4px;font-size:15px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px}
+.chip{border:1px solid var(--bd);background:var(--sf);border-radius:999px;padding:6px 14px;font-size:13px}.chip[disabled]{opacity:.55;cursor:not-allowed}
+.send{margin-left:auto;background:var(--gold);color:#fff;border:0;border-radius:50%;width:44px;height:44px;font-size:18px}
+.k b{display:block;font-size:26px;font-weight:800}.k small,.mu{color:var(--mu);font-size:12px}.up2{color:var(--gr);font-weight:600;font-size:12px}
+h2{font-size:15px;font-weight:700;display:flex;justify-content:space-between;margin-bottom:10px}h2 a{font-size:12px;color:var(--gold);font-weight:600}
+.it{display:flex;gap:12px;padding:12px 0;border-top:1px solid var(--bd)}.it:first-of-type{border:0}
+.th{flex:none;width:52px;height:52px;border-radius:12px;display:grid;place-items:center;font-size:22px}
+.it h3{font-size:14px;font-weight:700}.it p{font-size:12.5px;color:var(--mu)}
+.bd{font-size:11.5px;font-weight:600;border-radius:999px;padding:2px 10px;background:var(--gl);color:#7a5600;margin-left:6px}.bd.r{background:#fde8e8;color:var(--rd)}.bd.g{background:#e3f6e8;color:var(--gr)}
+.tabs{display:flex;gap:6px;margin-bottom:8px}.tabs button{border:0;background:none;padding:4px 12px;border-radius:999px;color:var(--mu);font-weight:600}.tabs [aria-selected=true]{background:var(--gl);color:var(--tx)}
+svg{display:block;width:100%}.big{font-size:22px;font-weight:800}
+.chat{display:grid;gap:10px;max-height:52vh;overflow:auto;margin:12px 0}.m{padding:10px 14px;border-radius:12px;max-width:80%;white-space:pre-wrap}.m.u{background:var(--gl);justify-self:end}.m.a{background:var(--bg);border:1px solid var(--bd)}
+dialog{border:1px solid var(--bd);border-radius:var(--r);padding:24px;max-width:380px;background:var(--sf);color:var(--tx)}
+@media(max-width:1100px){main{grid-template-columns:1fr}.g4{grid-template-columns:1fr 1fr}}
+@media(max-width:800px){.app{grid-template-columns:1fr}aside{position:fixed;inset:0 25% 0 0;z-index:30;transform:translateX(-100%);transition:transform .2s}aside.open{transform:none}#burger{display:block}.logo{min-width:0}.logo small,.pill,.search{display:none}.g2{grid-template-columns:1fr}.hero h1{font-size:26px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="sim" role="status">DATA SIMULASI — semua angka di layar ini adalah contoh, bukan data pasar live.</div>
+<header>
+ <button class="ic" id="burger" aria-label="Buka menu">☰</button>
+ <div class="logo"><svg width="38" height="38" viewBox="0 0 32 32" aria-hidden="true" style="width:38px"><path d="M16 2l12 14-12 14L4 16z" fill="#b8860b"/><path d="M16 8l6 8-6 8-6-8z" fill="#fdf3d6"/></svg><div><b class="brand"></b><small>OPPORTUNITY • RISK • INTELLIGENCE</small></div></div>
+ <label class="search"><span aria-hidden="true">⌕</span><input id="q" type="search" placeholder="Cari apa saja… (Ctrl + K)" aria-label="Cari"></label>
+ <div class="pill">DIGIUM AI ENGINE <span class="on">● Demo</span></div>
+ <button class="ic" aria-label="Notifikasi, 3 baru">🔔<i>3</i></button>
+ <button class="ic" id="theme" aria-label="Ganti tema">☀</button>
+ <div class="me"><div class="av" aria-hidden="true">F</div><div><b>Founder</b><br><small class="mu" id="plan">Paket Free</small></div></div>
+</header>
+<div class="app">
+ <aside id="side"><nav id="nav" aria-label="Menu utama"></nav>
+  <div class="up"><b>Intelijen lebih tajam untuk masa depan</b><p>Ubah data menjadi wawasan, dan wawasan menjadi tindakan.</p><button class="btn" id="upg">Upgrade ke Pro</button></div></aside>
+ <main id="view" tabindex="-1"></main>
+</div>
+<dialog id="dlg"><h3>Upgrade belum aktif</h3><p class="mu" style="margin:8px 0 16px">Pembayaran belum dihubungkan pada versi ini. Setelah Midtrans aktif, paket Pro dibuka otomatis dari server setelah pembayaran berhasil.</p><button class="btn" onclick="dlg.close()">Mengerti</button></dialog>
+<script>
+const BRAND='PREDION',CFG={liveAI:false,endpoint:'/api/ai/chat',plan:'Free'};
+const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+document.title=BRAND+' — Opportunity · Risk · Intelligence';$('.brand').textContent=BRAND;$('#plan').textContent='Paket '+CFG.plan;
+const NAV=[['home','Beranda','⌂'],['ai','Asisten AI','✦'],['opp','Opportunity Intelligence','◎'],['risk','Risk Radar','◈'],['mkt','Market Intelligence','▥'],['cty','Country Intelligence','◍'],['sig','Signal Center','≋'],['sim','Scenario Simulator','⚗'],['rep','Laporan','▤'],['agt','AI Agents','❖'],['kb','Knowledge Library','☰'],['set','Pengaturan','⚙']];
+const KPI=[['Pasar dipantau','186+','+12%',[3,4,4,5,5,6,7]],['Peluang ditemukan','842','+28%',[2,3,3,5,4,6,8]],['Risiko terdeteksi','297','+7%',[5,4,5,5,6,5,6]],['Sumber data','500+','+15%',[3,3,4,5,5,6,7]]];
+const INTEL=[['Market Intelligence','Outlook Energi Terbarukan Indonesia','Investasi energi hijau diperkirakan tumbuh didukung insentif pemerintah.','2 jam lalu','☀','#e3f6e8'],['Country Intelligence','Pertumbuhan Ekonomi Digital ASEAN','Ekonomi digital kawasan didorong e-commerce dan fintech.','4 jam lalu','🏙','#e5eefc'],['Risk Radar','Pantauan Rupiah & Arus Modal','Volatilitas rupiah meningkat di tengah ketidakpastian suku bunga global.','6 jam lalu','💱','#fde8e8']];
+const OPP=[['Energi Terbarukan','Clean Energy','Indonesia · 2025–2030','Tinggi',28,'☀','#e3f6e8'],['Rantai Pasok EV','Manufaktur','ASEAN · 2025–2030','Tinggi',24,'🔋','#e5eefc'],['Layanan Digital','Teknologi','Asia Tenggara · 2025–2029','Sedang',18,'☁','#f1e8fb']];
+const INS=[['Peluang','g','Outlook Energi Terbarukan Indonesia','Minat investasi energi hijau tetap kuat.','2j'],['Peluang','g','Pertumbuhan Ekonomi Digital ASEAN','Ekonomi digital kawasan terus melaju.','4j'],['Risiko','r','Pantauan Rupiah & Arus Modal','Pantau sinyal kebijakan BI dan arus modal.','6j']];
+const IDX={Indonesia:[7000,7120,7090,7300,7350,7280,7420,7390,7510,7542],Asia:[100,101,99,102,104,103,105,104,106,107],Global:[100,100,102,101,103,105,104,106,105,108]};
+const TR={Indonesia:[3,3.2,3,3.5,3.4,3.8,3.6,4],Asia:[2,2.2,2.1,2.5,2.4,2.3,2.7,2.6],Global:[1.2,1.5,1.4,1.3,1.8,1.7,2,1.9]};
+const IND=[['PDB Growth','4,8%','▲ 0,3%'],['Inflasi','2,5%','▼ 0,2%'],['Suku bunga','6,0%','► 0,0%'],['Neraca dagang','$4,2M','▲ 12%']];
+const sp=(a,c='#b8860b',h=40)=>{const mx=Math.max(...a),mn=Math.min(...a),w=100;return`<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" style="height:${h}px" aria-hidden="true"><polyline fill="none" stroke="${c}" stroke-width="2" vector-effect="non-scaling-stroke" points="${a.map((v,i)=>`${i/(a.length-1)*w},${h-4-(v-mn)/(mx-mn||1)*(h-8)}`).join(' ')}"/></svg>`};
+const lc=(S,h=130)=>{const all=Object.values(S).flat(),mx=Math.max(...all),mn=Math.min(...all),C=['#b8860b','#2563eb','#7c3aed'];return`<svg viewBox="0 0 300 ${h}" preserveAspectRatio="none" style="height:${h}px" role="img" aria-label="Grafik tren simulasi">${Object.values(S).map((a,k)=>`<polyline fill="none" stroke="${C[k]}" stroke-width="2" vector-effect="non-scaling-stroke" points="${a.map((v,i)=>`${i/(a.length-1)*300},${h-6-(v-mn)/(mx-mn||1)*(h-12)}`).join(' ')}"/>`).join('')}</svg>`};
+const gauge=v=>{const a=Math.PI*(1-v/100),x=60+44*Math.cos(a),y=60-44*Math.sin(a);return`<svg viewBox="0 0 120 70" style="max-width:220px;margin:auto" role="img" aria-label="Level risiko keseluruhan: rendah"><path d="M12 60A48 48 0 0 1 48 14" stroke="#16a34a" stroke-width="9" fill="none"/><path d="M48 14A48 48 0 0 1 90 18" stroke="#eab308" stroke-width="9" fill="none"/><path d="M90 18A48 48 0 0 1 108 60" stroke="#dc2626" stroke-width="9" fill="none"/><line x1="60" y1="60" x2="${x}" y2="${y}" stroke="#1c1917" stroke-width="3" stroke-linecap="round"/><circle cx="60" cy="60" r="5" fill="#1c1917"/></svg>`};
+const intel=()=>INTEL.map(i=>`<div class="it"><div class="th" style="background:${i[5]}" aria-hidden="true">${i[4]}</div><div><span class="mu">${esc(i[0])} · ${i[3]}</span><h3>${esc(i[1])}</h3><p>${esc(i[2])}</p></div></div>`).join('');
+const opps=()=>OPP.map(o=>`<div class="it"><div class="th" style="background:${o[6]}" aria-hidden="true">${o[5]}</div><div style="flex:1"><h3>${esc(o[0])}<span class="bd g">${esc(o[1])}</span></h3><p>${esc(o[2])}</p></div><div style="text-align:right"><span class="bd">${o[3]}</span><div class="up2">▲ ${o[4]}%</div></div></div>`).join('');
+const mo=t=>{const a=IDX[t],last=a[a.length-1];return`<div class="big">${t==='Indonesia'?'IDX Composite '+last.toLocaleString('id-ID'):'Indeks '+t+' '+last}</div>${lc({x:a},110)}`};
+const home=()=>`<div class="col"><section class="card hero"><span class="tag">PLATFORM INTELIJEN BERBASIS AI</span><h1>Selamat pagi, <em>Founder</em></h1><p>Temukan peluang. Pahami risiko. Ambil keputusan lebih baik.</p>
+<form class="ask" id="ask"><input id="aq" aria-label="Tanya ${BRAND}" placeholder="Tanya ${BRAND} soal pasar, peluang bisnis, risiko, atau langkah strategis berikutnya…"><div class="row"><button type="button" class="chip" disabled title="Segera hadir">Web</button><button type="button" class="chip" disabled title="Segera hadir">Data</button><button type="button" class="chip" data-go="rep">Laporan</button><button type="button" class="chip" disabled title="Segera hadir">Suara</button><button class="send" aria-label="Kirim">➤</button></div></form></section>
+<div class="g4">${KPI.map(k=>`<div class="card k"><small>${k[0]}</small><b>${k[1]}</b><span class="up2">▲ ${k[2]}</span> <small>vs 30 hari lalu</small>${sp(k[3])}</div>`).join('')}</div>
+<div class="g2"><section class="card"><h2>Intelijen Terbaru <a href="#mkt">Lihat semua</a></h2>${intel()}</section><section class="card"><h2>Peluang Teratas <a href="#opp">Lihat semua</a></h2>${opps()}</section></div>
+<div class="g2"><section class="card"><h2>Tren Pasar <span class="mu">● Indonesia ● Asia ● Global</span></h2>${lc(TR)}</section><section class="card"><h2>Indikator Kunci</h2><div class="g2">${IND.map(i=>`<div><small class="mu">${i[0]}</small><div class="big">${i[1]}</div><small class="up2">${i[2]}</small></div>`).join('')}</div></section></div></div>
+<div class="col"><section class="card"><h2>Wawasan AI <a href="#ai">Lihat semua</a></h2>${INS.map(i=>`<div class="it"><div><h3>${esc(i[2])}<span class="bd ${i[1]}">${i[0]}</span></h3><p>${esc(i[3])}</p><span class="mu">${i[4]} lalu</span></div></div>`).join('')}</section>
+<section class="card"><h2>Ikhtisar Pasar</h2><div class="tabs" role="tablist">${Object.keys(IDX).map((t,i)=>`<button role="tab" aria-selected="${!i}" data-t="${t}">${t}</button>`).join('')}</div><div id="mo">${mo('Indonesia')}</div></section>
+<section class="card"><h2>Level Risiko</h2><small class="mu">Risiko keseluruhan</small>${gauge(22)}<p style="text-align:center;font-weight:700">Rendah</p><p class="mu" style="text-align:center">Masih dalam batas yang dapat dikelola (simulasi).</p></section></div>`;
+const ai=(pre)=>`<section class="card" style="grid-column:1/-1"><h2>Asisten AI ${BRAND}</h2><div class="chat" id="chat" aria-live="polite"></div><form class="ask" id="cf" style="margin:0"><input id="cq" aria-label="Pesan" placeholder="Tulis pertanyaan Anda…" maxlength="1500" required><div class="row"><button class="send" aria-label="Kirim">➤</button></div></form></section>`;
+const gen=id=>{const n=NAV.find(x=>x[0]===id);return`<section class="card" style="grid-column:1/-1"><h2>${esc(n[1])}</h2><p class="mu">Modul ini dalam pengembangan. Berikut contoh data simulasi.</p></section><div class="col"><section class="card"><h2>Intelijen terkait</h2>${intel()}</section></div><div class="col"><section class="card"><h2>Peluang terkait</h2>${opps()}</section></div>`};
+let msgs=[];
+const add=(r,t)=>{const d=document.createElement('div');d.className='m '+(r==='user'?'u':'a');d.textContent=t;$('#chat').append(d);d.scrollIntoView({block:'end'});return d};
+async function send(t){msgs.push({role:'user',content:t});add('user',t);const w=add('assistant','Menganalisis…');let out;
+ if(CFG.liveAI){try{const r=await fetch(CFG.endpoint,{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+(sessionStorage.getItem('predion_token')||'')},body:JSON.stringify({messages:msgs.slice(-12)}),signal:AbortSignal.timeout(25000)});if(!r.ok)throw 0;out=(await r.json()).text}catch(e){out='Layanan AI sedang tidak tersedia. Coba lagi sebentar lagi.'}}
+ else out='[Mode demo] AI live belum diaktifkan. Pertanyaan Anda: “'+t+'”. Setelah gateway server terhubung, jawaban analisis akan muncul di sini.';
+ w.textContent=out;msgs.push({role:'assistant',content:out})}
+function route(){const id=(location.hash||'#home').slice(1),ok=NAV.some(n=>n[0]===id)?id:'home';$('#nav').innerHTML=NAV.map(n=>`<a href="#${n[0]}"${n[0]===ok?' aria-current="page"':''}><span aria-hidden="true">${n[2]}</span>${n[1]}</a>`).join('');
+ $('#view').innerHTML=ok==='home'?home():ok==='ai'?ai():gen(ok);$('#side').classList.remove('open');
+ if(ok==='ai'){$('#cf').onsubmit=e=>{e.preventDefault();const v=$('#cq').value.trim();$('#cq').value='';v&&send(v)};if(window._pq){send(window._pq);window._pq=null}}
+ if(ok==='home'){$('#ask').onsubmit=e=>{e.preventDefault();const v=$('#aq').value.trim();if(v){window._pq=v;location.hash='#ai'}};document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>location.hash='#'+b.dataset.go);
+  document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tabs button').forEach(x=>x.setAttribute('aria-selected',x===b));$('#mo').innerHTML=mo(b.dataset.t)})}}
+addEventListener('hashchange',route);route();
+$('#burger').onclick=()=>$('#side').classList.toggle('open');$('#upg').onclick=()=>$('#dlg').showModal();
+$('#theme').onclick=()=>{const d=document.documentElement;d.dataset.theme=d.dataset.theme==='dark'?'':'dark'};
+addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();$('#q').focus()}});
+$('#q').onkeydown=e=>{if(e.key==='Enter'&&e.target.value.trim()){window._pq=e.target.value.trim();e.target.value='';location.hash==='#ai'?route():location.hash='#ai'}};
+</script>
+</body>
+</html>
