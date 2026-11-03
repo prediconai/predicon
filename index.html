@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="PREDION — platform intelijen peluang dan risiko untuk founder dan UKM di Indonesia dan ASEAN.">
+<meta name="description" content="PREDICON AI — platform intelijen peluang dan risiko untuk founder dan UKM di Indonesia dan ASEAN.">
 <meta name="theme-color" content="#b8860b">
-<title>PREDION — Opportunity · Risk · Intelligence</title>
+<title>PREDICON AI — Opportunity · Risk · Intelligence</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 2l12 14-12 14L4 16z' fill='%23b8860b'/%3E%3C/svg%3E">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
 <style>
@@ -33,6 +33,7 @@ nav span{width:20px;text-align:center;color:var(--gold);font-size:17px}
 .up{margin-top:auto;border:1px solid var(--bd);border-radius:var(--r);padding:16px;background:var(--bg)}
 .up p{font-size:12px;color:var(--mu);margin:6px 0 12px}
 .btn{background:var(--gold);color:#fff;border:0;border-radius:10px;padding:10px 16px;font-weight:700;width:100%}
+.btn:disabled{opacity:.5;cursor:not-allowed}
 main{display:grid;grid-template-columns:1fr 330px;gap:20px;padding:20px 24px;align-items:start}
 .card{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:16px}
 .col{display:grid;gap:16px;min-width:0}.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
@@ -54,6 +55,13 @@ h2{font-size:15px;font-weight:700;display:flex;justify-content:space-between;mar
 svg{display:block;width:100%}.big{font-size:22px;font-weight:800}
 .chat{display:grid;gap:10px;max-height:52vh;overflow:auto;margin:12px 0}.m{padding:10px 14px;border-radius:12px;max-width:80%;white-space:pre-wrap}.m.u{background:var(--gl);justify-self:end}.m.a{background:var(--bg);border:1px solid var(--bd)}
 dialog{border:1px solid var(--bd);border-radius:var(--r);padding:24px;max-width:380px;background:var(--sf);color:var(--tx)}
+.auth-box{display:grid;gap:10px;margin:12px 0}
+.auth-box input{border:1px solid var(--bd);border-radius:8px;padding:10px 12px;font-size:14px;background:var(--bg)}
+.auth-box input:focus{border-color:var(--gold);outline:0}
+.auth-error{color:var(--rd);font-size:12px;min-height:16px}
+.auth-tabs{display:flex;gap:4px;margin-bottom:8px}.auth-tabs button{flex:1;border:0;background:none;padding:8px;border-radius:8px;font-weight:600;color:var(--mu)}.auth-tabs button[aria-selected=true]{background:var(--gl);color:var(--tx)}
+.loading{display:inline-block;width:16px;height:16px;border:2px solid var(--bd);border-top-color:var(--gold);border-radius:50%;animation:spin .6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
 @media(max-width:1100px){main{grid-template-columns:1fr}.g4{grid-template-columns:1fr 1fr}}
 @media(max-width:800px){.app{grid-template-columns:1fr}aside{position:fixed;inset:0 25% 0 0;z-index:30;transform:translateX(-100%);transition:transform .2s}aside.open{transform:none}#burger{display:block}.logo{min-width:0}.logo small,.pill,.search{display:none}.g2{grid-template-columns:1fr}.hero h1{font-size:26px}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
@@ -68,18 +76,197 @@ dialog{border:1px solid var(--bd);border-radius:var(--r);padding:24px;max-width:
  <div class="pill">DIGIUM AI ENGINE <span class="on">● Demo</span></div>
  <button class="ic" aria-label="Notifikasi, 3 baru">🔔<i>3</i></button>
  <button class="ic" id="theme" aria-label="Ganti tema">☀</button>
- <div class="me"><div class="av" aria-hidden="true">F</div><div><b>Founder</b><br><small class="mu" id="plan">Paket Free</small></div></div>
+ <div class="me" id="user-area"></div>
 </header>
 <div class="app">
  <aside id="side"><nav id="nav" aria-label="Menu utama"></nav>
   <div class="up"><b>Intelijen lebih tajam untuk masa depan</b><p>Ubah data menjadi wawasan, dan wawasan menjadi tindakan.</p><button class="btn" id="upg">Upgrade ke Pro</button></div></aside>
  <main id="view" tabindex="-1"></main>
 </div>
-<dialog id="dlg"><h3>Upgrade belum aktif</h3><p class="mu" style="margin:8px 0 16px">Pembayaran belum dihubungkan pada versi ini. Setelah Midtrans aktif, paket Pro dibuka otomatis dari server setelah pembayaran berhasil.</p><button class="btn" onclick="dlg.close()">Mengerti</button></dialog>
+<dialog id="dlg"><h3>Upgrade belum aktif</h3><p class="mu" style="margin:8px 0 16px">Pembayaran belum dihubungkan pada versi ini. Integrasi Xendit akan dibuka setelah konfigurasi selesai.</p><button class="btn" data-action="close-dlg">Mengerti</button></dialog>
+<dialog id="auth-dlg" style="max-width:360px"><div id="auth-content"></div></dialog>
 <script>
-const BRAND='PREDION',CFG={liveAI:false,endpoint:'/api/ai/chat',plan:'Free'};
+const BRAND='PREDICON AI',CFG={liveAI:false,endpoint:'/api/ai/chat',convEndpoint:'/api/conversations',historyEndpoint:'/api/history',logoutEndpoint:'/api/auth/logout',plan:'Free'};
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-document.title=BRAND+' — Opportunity · Risk · Intelligence';$('.brand').textContent=BRAND;$('#plan').textContent='Paket '+CFG.plan;
+document.title=BRAND+' — Opportunity · Risk · Intelligence';$('.brand').textContent=BRAND;
+
+// ─── Supabase client (browser-safe: uses anon key only) ──────────────────
+let _sb=null;
+function getSB(){
+  if(_sb)return _sb;
+  const url=document.querySelector('meta[name="x-supabase-url"]')?.content;
+  const key=document.querySelector('meta[name="x-supabase-anon-key"]')?.content;
+  if(!url||!key)return null;
+  _sb={url,key};
+  return _sb;
+}
+// Inject Supabase config via meta tags (set by server or inline below)
+// These are read from window.__ENV if present (injected by server in production)
+const ENV=window.__ENV||{};
+if(ENV.SUPABASE_URL){
+  const m1=document.createElement('meta');m1.name='x-supabase-url';m1.content=ENV.SUPABASE_URL;document.head.appendChild(m1);
+}
+if(ENV.SUPABASE_ANON_KEY){
+  const m2=document.createElement('meta');m2.name='x-supabase-anon-key';m2.content=ENV.SUPABASE_ANON_KEY;document.head.appendChild(m2);
+}
+
+// ─── Session management ──────────────────────────────────────────────────
+let currentUser=null;
+async function initAuth(){
+  const sb=getSB();
+  if(!sb){
+    // No Supabase configured — show guest mode
+    renderUserArea(null);
+    return;
+  }
+  try{
+    // Check for existing session via localStorage token
+    const token=sessionStorage.getItem('predicon_access_token');
+    if(token){
+      // Validate token by calling an authenticated endpoint
+      try{
+        const r=await fetch('/api/history',{headers:{Authorization:'Bearer '+token}});
+        if(r.ok){
+          // Token is valid — extract user info from JWT payload safely
+          try{
+            const parts=token.split('.');
+            if(parts.length!==3)throw new Error('malformed');
+            const payload=JSON.parse(atob(parts[1]));
+            currentUser={id:payload.sub||'',email:payload.email||'User',token};
+          }catch(_e){
+            // Token structure is malformed but server accepted it — use fallback
+            currentUser={id:'',email:'User',token};
+          }
+          renderUserArea(currentUser);
+          return;
+        }else{
+          sessionStorage.removeItem('predicon_access_token');
+        }
+      }catch(e){sessionStorage.removeItem('predicon_access_token')}
+    }
+    renderUserArea(null);
+  }catch(e){renderUserArea(null)}
+}
+
+function renderUserArea(user){
+  const area=$('#user-area');
+  if(user){
+    const initial=(user.email||'U').charAt(0).toUpperCase();
+    area.innerHTML=`<div class="av" aria-hidden="true">${esc(initial)}</div><div><b>${esc(user.email||'User')}</b><br><small class="mu" id="plan">Paket Free</small></div><button class="btn" style="width:auto;padding:4px 12px;font-size:12px;margin-left:8px" data-action="logout">Keluar</button>`;
+    const planEl=$('#plan');if(planEl)planEl.textContent='Paket '+CFG.plan;
+  }else{
+    area.innerHTML=`<button class="btn" style="width:auto;padding:6px 16px" data-action="open-auth">Masuk / Daftar</button>`;
+  }
+}
+
+// ─── Auth dialog (login / register) ──────────────────────────────────────
+function openAuth(mode){
+  const dlg=$('#auth-dlg');
+  const m=mode||'login';
+  const content=$('#auth-content');
+  content.innerHTML=`
+    <div class="auth-tabs"><button id="tab-login" aria-selected="${m==='login'}" data-action="switch-tab" data-tab="login">Masuk</button><button id="tab-register" aria-selected="${m==='register'}" data-action="switch-tab" data-tab="register">Daftar</button></div>
+    <form class="auth-box" id="auth-form">
+      <input id="auth-email" type="email" placeholder="Email" required autocomplete="email">
+      <input id="auth-pass" type="password" placeholder="Password (min. 6 karakter)" required minlength="6" autocomplete="${m==='login'?'current-password':'new-password'}">
+      <div class="auth-error" id="auth-error"></div>
+      <button class="btn" type="submit" id="auth-submit">${m==='login'?'Masuk':'Daftar'}</button>
+    </form>
+    <p class="mu" style="margin-top:12px;font-size:11px;text-align:center">Autentikasi melalui Supabase Auth. Token disimpan di sessionStorage.</p>
+  `;
+  dlg.showModal();
+  $('#auth-form').onsubmit=handleAuthSubmit;
+  setTimeout(()=>$('#auth-email').focus(),100);
+}
+
+function switchAuthTab(mode){
+  const loginTab=$('#tab-login'),regTab=$('#tab-register');
+  loginTab.setAttribute('aria-selected',mode==='login');
+  regTab.setAttribute('aria-selected',mode==='register');
+  $('#auth-submit').textContent=mode==='login'?'Masuk':'Daftar';
+  $('#auth-pass').setAttribute('autocomplete',mode==='login'?'current-password':'new-password');
+  $('#auth-error').textContent='';
+  $('#auth-form').dataset.mode=mode;
+}
+
+async function handleAuthSubmit(e){
+  e.preventDefault();
+  const form=e.target;
+  const mode=form.dataset.mode||'login';
+  const email=$('#auth-email').value.trim();
+  const pass=$('#auth-pass').value;
+  const errEl=$('#auth-error');
+  const btn=$('#auth-submit');
+
+  errEl.textContent='';
+  btn.disabled=true;
+  btn.innerHTML='<span class="loading"></span> '+(mode==='login'?'Masuk...':'Mendaftar...');
+
+  const sb=getSB();
+  if(!sb){
+    errEl.textContent='Supabase belum dikonfigurasi. Hubungi administrator.';
+    btn.disabled=false;btn.textContent=mode==='login'?'Masuk':'Daftar';
+    return;
+  }
+
+  try{
+    const endpoint=mode==='login'?'token':'signup';
+    const body=mode==='login'
+      ?`grant_type=password&username=${encodeURIComponent(email)}&password=${encodeURIComponent(pass)}`
+      :JSON.stringify({email,password:pass});
+
+    const headers={'Content-Type': mode==='login'?'application/x-www-form-urlencoded':'application/json'};
+    const r=await fetch(sb.url+'/auth/v1/'+endpoint,{
+      method:'POST',headers:{...headers,'apikey':sb.key},
+      body
+    });
+    const data=await r.json();
+    if(!r.ok){
+      errEl.textContent=data.error_description||data.msg||data.error||'Autentikasi gagal.';
+      btn.disabled=false;btn.textContent=mode==='login'?'Masuk':'Daftar';
+      return;
+    }
+    // Store token
+    const token=data.access_token;
+    sessionStorage.setItem('predicon_access_token',token);
+    currentUser={id:data.user?.id||'',email:email,token};
+    clearHistoryContext(); // account switch: drop any previous account's conversation
+    renderUserArea(currentUser);
+    $('#auth-dlg').close();
+    // Reload conversation history
+    if(location.hash==='#ai')route();
+  }catch(err){
+    errEl.textContent='Koneksi gagal. Periksa jaringan Anda.';
+    btn.disabled=false;btn.textContent=mode==='login'?'Masuk':'Daftar';
+  }
+}
+
+// Server-side logout: call /api/auth/logout to revoke token at Supabase,
+// then clear local state regardless of whether the server call succeeds.
+async function logout(btn){
+  if(btn){btn.disabled=true;btn.textContent='Keluar...'}
+  // Best-effort server-side revocation
+  if(currentUser?.token){
+    try{
+      await fetch(CFG.logoutEndpoint,{
+        method:'POST',
+        headers:{Authorization:'Bearer '+currentUser.token},
+        signal:AbortSignal.timeout(5000)
+      });
+    }catch(e){
+      // Server call failed — still clear local state below
+    }
+  }
+  // Always clear local state, even if server logout failed
+  sessionStorage.removeItem('predicon_access_token');
+  currentUser=null;
+  clearHistoryContext(); // reset conversation id / msgs / loaded flags
+  renderUserArea(null);
+  if(location.hash==='#ai')route();
+}
+
+// ─── Navigation & UI (preserved from P0) ─────────────────────────────────
+$('#plan')?$('#plan').textContent='Paket '+CFG.plan:null;
 const NAV=[['home','Beranda','⌂'],['ai','Asisten AI','✦'],['opp','Opportunity Intelligence','◎'],['risk','Risk Radar','◈'],['mkt','Market Intelligence','▥'],['cty','Country Intelligence','◍'],['sig','Signal Center','≋'],['sim','Scenario Simulator','⚗'],['rep','Laporan','▤'],['agt','AI Agents','❖'],['kb','Knowledge Library','☰'],['set','Pengaturan','⚙']];
 const KPI=[['Pasar dipantau','186+','+12%',[3,4,4,5,5,6,7]],['Peluang ditemukan','842','+28%',[2,3,3,5,4,6,8]],['Risiko terdeteksi','297','+7%',[5,4,5,5,6,5,6]],['Sumber data','500+','+15%',[3,3,4,5,5,6,7]]];
 const INTEL=[['Market Intelligence','Outlook Energi Terbarukan Indonesia','Investasi energi hijau diperkirakan tumbuh didukung insentif pemerintah.','2 jam lalu','☀','#e3f6e8'],['Country Intelligence','Pertumbuhan Ekonomi Digital ASEAN','Ekonomi digital kawasan didorong e-commerce dan fintech.','4 jam lalu','🏙','#e5eefc'],['Risk Radar','Pantauan Rupiah & Arus Modal','Volatilitas rupiah meningkat di tengah ketidakpastian suku bunga global.','6 jam lalu','💱','#fde8e8']];
@@ -94,7 +281,7 @@ const gauge=v=>{const a=Math.PI*(1-v/100),x=60+44*Math.cos(a),y=60-44*Math.sin(a
 const intel=()=>INTEL.map(i=>`<div class="it"><div class="th" style="background:${i[5]}" aria-hidden="true">${i[4]}</div><div><span class="mu">${esc(i[0])} · ${i[3]}</span><h3>${esc(i[1])}</h3><p>${esc(i[2])}</p></div></div>`).join('');
 const opps=()=>OPP.map(o=>`<div class="it"><div class="th" style="background:${o[6]}" aria-hidden="true">${o[5]}</div><div style="flex:1"><h3>${esc(o[0])}<span class="bd g">${esc(o[1])}</span></h3><p>${esc(o[2])}</p></div><div style="text-align:right"><span class="bd">${o[3]}</span><div class="up2">▲ ${o[4]}%</div></div></div>`).join('');
 const mo=t=>{const a=IDX[t],last=a[a.length-1];return`<div class="big">${t==='Indonesia'?'IDX Composite '+last.toLocaleString('id-ID'):'Indeks '+t+' '+last}</div>${lc({x:a},110)}`};
-const home=()=>`<div class="col"><section class="card hero"><span class="tag">PLATFORM INTELIJEN BERBASIS AI</span><h1>Selamat pagi, <em>Founder</em></h1><p>Temukan peluang. Pahami risiko. Ambil keputusan lebih baik.</p>
+const home=()=>`<div class="col"><section class="card hero"><span class="tag">PLATFORM INTELIJEN BERBASIS AI</span><h1>Selamat pagi, <em>${currentUser?esc(currentUser.email):'Founder'}</em></h1><p>Temukan peluang. Pahami risiko. Ambil keputusan lebih baik.</p>
 <form class="ask" id="ask"><input id="aq" aria-label="Tanya ${BRAND}" placeholder="Tanya ${BRAND} soal pasar, peluang bisnis, risiko, atau langkah strategis berikutnya…"><div class="row"><button type="button" class="chip" disabled title="Segera hadir">Web</button><button type="button" class="chip" disabled title="Segera hadir">Data</button><button type="button" class="chip" data-go="rep">Laporan</button><button type="button" class="chip" disabled title="Segera hadir">Suara</button><button class="send" aria-label="Kirim">➤</button></div></form></section>
 <div class="g4">${KPI.map(k=>`<div class="card k"><small>${k[0]}</small><b>${k[1]}</b><span class="up2">▲ ${k[2]}</span> <small>vs 30 hari lalu</small>${sp(k[3])}</div>`).join('')}</div>
 <div class="g2"><section class="card"><h2>Intelijen Terbaru <a href="#mkt">Lihat semua</a></h2>${intel()}</section><section class="card"><h2>Peluang Teratas <a href="#opp">Lihat semua</a></h2>${opps()}</section></div>
@@ -102,24 +289,227 @@ const home=()=>`<div class="col"><section class="card hero"><span class="tag">PL
 <div class="col"><section class="card"><h2>Wawasan AI <a href="#ai">Lihat semua</a></h2>${INS.map(i=>`<div class="it"><div><h3>${esc(i[2])}<span class="bd ${i[1]}">${i[0]}</span></h3><p>${esc(i[3])}</p><span class="mu">${i[4]} lalu</span></div></div>`).join('')}</section>
 <section class="card"><h2>Ikhtisar Pasar</h2><div class="tabs" role="tablist">${Object.keys(IDX).map((t,i)=>`<button role="tab" aria-selected="${!i}" data-t="${t}">${t}</button>`).join('')}</div><div id="mo">${mo('Indonesia')}</div></section>
 <section class="card"><h2>Level Risiko</h2><small class="mu">Risiko keseluruhan</small>${gauge(22)}<p style="text-align:center;font-weight:700">Rendah</p><p class="mu" style="text-align:center">Masih dalam batas yang dapat dikelola (simulasi).</p></section></div>`;
-const ai=(pre)=>`<section class="card" style="grid-column:1/-1"><h2>Asisten AI ${BRAND}</h2><div class="chat" id="chat" aria-live="polite"></div><form class="ask" id="cf" style="margin:0"><input id="cq" aria-label="Pesan" placeholder="Tulis pertanyaan Anda…" maxlength="1500" required><div class="row"><button class="send" aria-label="Kirim">➤</button></div></form></section>`;
+const ai=(pre)=>`<section class="card" style="grid-column:1/-1"><h2>Asisten AI ${BRAND}</h2>${currentUser?'':'<div class="auth-box" style="background:var(--gl);border-radius:10px;padding:12px;margin-bottom:12px"><p style="font-size:13px">Masuk untuk mengakses AI live dan menyimpan riwayat percakapan.</p><button class="btn" style="width:auto;margin-top:8px" data-action="open-auth">Masuk Sekarang</button></div>'}<div class="chat" id="chat" aria-live="polite"></div>${currentUser?'<form class="ask" id="cf" style="margin:0"><input id="cq" aria-label="Pesan" placeholder="Tulis pertanyaan Anda…" maxlength="1500" required><div class="row"><span class="mu" style="font-size:11px">Mode: '+(CFG.liveAI?'AI Live':'Demo')+'</span><button class="send" aria-label="Kirim">➤</button></div></form>':''}</section>`;
 const gen=id=>{const n=NAV.find(x=>x[0]===id);return`<section class="card" style="grid-column:1/-1"><h2>${esc(n[1])}</h2><p class="mu">Modul ini dalam pengembangan. Berikut contoh data simulasi.</p></section><div class="col"><section class="card"><h2>Intelijen terkait</h2>${intel()}</section></div><div class="col"><section class="card"><h2>Peluang terkait</h2>${opps()}</section></div>`};
 let msgs=[];
 const add=(r,t)=>{const d=document.createElement('div');d.className='m '+(r==='user'?'u':'a');d.textContent=t;$('#chat').append(d);d.scrollIntoView({block:'end'});return d};
-async function send(t){msgs.push({role:'user',content:t});add('user',t);const w=add('assistant','Menganalisis…');let out;
- if(CFG.liveAI){try{const r=await fetch(CFG.endpoint,{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+(sessionStorage.getItem('predion_token')||'')},body:JSON.stringify({messages:msgs.slice(-12)}),signal:AbortSignal.timeout(25000)});if(!r.ok)throw 0;out=(await r.json()).text}catch(e){out='Layanan AI sedang tidak tersedia. Coba lagi sebentar lagi.'}}
- else out='[Mode demo] AI live belum diaktifkan. Pertanyaan Anda: “'+t+'”. Setelah gateway server terhubung, jawaban analisis akan muncul di sini.';
- w.textContent=out;msgs.push({role:'assistant',content:out})}
-function route(){const id=(location.hash||'#home').slice(1),ok=NAV.some(n=>n[0]===id)?id:'home';$('#nav').innerHTML=NAV.map(n=>`<a href="#${n[0]}"${n[0]===ok?' aria-current="page"':''}><span aria-hidden="true">${n[2]}</span>${n[1]}</a>`).join('');
- $('#view').innerHTML=ok==='home'?home():ok==='ai'?ai():gen(ok);$('#side').classList.remove('open');
- if(ok==='ai'){$('#cf').onsubmit=e=>{e.preventDefault();const v=$('#cq').value.trim();$('#cq').value='';v&&send(v)};if(window._pq){send(window._pq);window._pq=null}}
- if(ok==='home'){$('#ask').onsubmit=e=>{e.preventDefault();const v=$('#aq').value.trim();if(v){window._pq=v;location.hash='#ai'}};document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>location.hash='#'+b.dataset.go);
-  document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tabs button').forEach(x=>x.setAttribute('aria-selected',x===b));$('#mo').innerHTML=mo(b.dataset.t)})}}
-addEventListener('hashchange',route);route();
-$('#burger').onclick=()=>$('#side').classList.toggle('open');$('#upg').onclick=()=>$('#dlg').showModal();
+
+// >>> HISTORY-RECOVERY-BEGIN (extracted verbatim by test_history.js — keep markers)
+let currentConversationId=null; // Active conversation id (restored from history)
+let _historyLoaded=false;       // True only after a SUCCESSFUL load (or confirmed empty)
+let _historyLoading=false;      // Concurrency guard: a history fetch is in flight
+let _historyLoadPromise=null;   // Dedupes concurrent loadHistory() callers
+let _historyEpoch=0;            // Bumped on logout/account switch to cancel in-flight loads
+
+// Render the in-memory `msgs` array into the chat container (idempotent).
+function renderHistory(){
+  const chat=$('#chat');
+  if(!chat)return;
+  chat.innerHTML='';
+  msgs.forEach(m=>add(m.role,m.content));
+}
+
+// Reset all conversation context. Called on logout and on account switch so a
+// previous account's conversation id can never leak into the next session.
+function clearHistoryContext(){
+  _historyEpoch++;              // Invalidate any in-flight load for the old session
+  currentConversationId=null;
+  msgs=[];
+  _historyLoaded=false;
+  _historyLoading=false;
+  _historyLoadPromise=null;
+}
+
+// Build the /api/ai/chat request body. Only attaches conversation_id when a
+// valid, previously-verified id is present (never fabricate or reuse a stale one).
+function buildChatBody(list){
+  const body={messages:(list||[]).slice(-12)};
+  if(currentConversationId)body.conversation_id=currentConversationId;
+  return body;
+}
+
+// Load conversation history from the server and resume the most recent
+// conversation. Retry-safe: _historyLoaded is set ONLY after a successful
+// fetch+parse (messages, or a confirmed-empty history). Any failure/timeout/
+// invalid response leaves the state retryable. Concurrent callers share one
+// in-flight request; an account switch invalidates the in-flight result.
+async function loadHistory(){
+  if(!currentUser)return false;
+  if(_historyLoaded)return true;                 // Already loaded successfully
+  if(_historyLoading)return _historyLoadPromise; // Dedupe concurrent callers
+
+  const epoch=_historyEpoch;
+  const token=currentUser.token;
+  const stillCurrent=()=>_historyEpoch===epoch && currentUser && currentUser.token===token;
+
+  _historyLoading=true;
+  _historyLoadPromise=(async()=>{
+    let loaded=false;
+    try{
+      // ── Main path: most recent conversation + its messages ──
+      let mainKnownEmpty=false;
+      try{
+        const listR=await fetch(CFG.convEndpoint+'?limit=1',{headers:{Authorization:'Bearer '+token}});
+        if(listR.ok){
+          let listData=null;
+          try{listData=await listR.json()}catch(_e){listData=null}
+          if(listData&&Array.isArray(listData.conversations)){
+            const convs=listData.conversations;
+            if(convs.length===0){
+              mainKnownEmpty=true; // valid: user has no conversations yet
+            }else if(convs[0]&&typeof convs[0].id==='string'&&convs[0].id){
+              const cid=convs[0].id;
+              const msgR=await fetch(CFG.convEndpoint+'/'+encodeURIComponent(cid)+'?limit=100',{headers:{Authorization:'Bearer '+token}});
+              if(msgR.ok){
+                let msgData=null;
+                try{msgData=await msgR.json()}catch(_e){msgData=null}
+                if(msgData&&Array.isArray(msgData.messages)&&stillCurrent()){
+                  currentConversationId=cid; // verified, server-owned conversation
+                  msgs=msgData.messages.map(m=>({role:m.role,content:m.content}));
+                  renderHistory();
+                  loaded=true;
+                }
+              }
+              // msgR not ok (404/500) → leave loaded=false, fall through to fallback
+            }
+          }
+          // invalid/missing conversations payload → unknown, fall through (retryable)
+        }
+      }catch(_e){ /* main path network error → try fallback */ }
+
+      if(loaded)return true;
+
+      // ── Fallback path: flat history (backward compatibility) ──
+      try{
+        const r=await fetch(CFG.historyEndpoint,{headers:{Authorization:'Bearer '+token}});
+        if(r.ok){
+          let data=null;
+          try{data=await r.json()}catch(_e){data=null}
+          if(data&&Array.isArray(data.messages)&&stillCurrent()){
+            msgs=data.messages.map(m=>({role:m.role,content:m.content}));
+            // Recover the active conversation id ONLY when the server supplies a
+            // valid, non-empty string. Never fabricate an id.
+            const fid=(typeof data.conversation_id==='string'&&data.conversation_id)?data.conversation_id:null;
+            if(fid)currentConversationId=fid;
+            renderHistory();
+            loaded=true;
+          }
+        }
+      }catch(_e){ /* fallback network error → retry allowed */ }
+
+      // If the main endpoint confirmed there is no history, a fallback failure
+      // must not force an endless retry loop — treat it as a valid empty state.
+      if(!loaded&&mainKnownEmpty)loaded=true;
+    }finally{
+      if(_historyEpoch===epoch){ // ignore if the session changed mid-flight
+        _historyLoading=false;
+        _historyLoadPromise=null;
+        if(loaded)_historyLoaded=true;
+      }
+    }
+    return loaded;
+  })();
+
+  return _historyLoadPromise;
+}
+// <<< HISTORY-RECOVERY-END
+
+// ─── Send message to AI ──────────────────────────────────────────────────
+async function send(t){
+  msgs.push({role:'user',content:t});add('user',t);
+  const w=add('assistant','Menganalisis…');
+  let out;
+
+  if(!currentUser){
+    out='Anda belum masuk. Klik "Masuk / Daftar" untuk mengakses AI live dan menyimpan percakapan.';
+  }else if(!CFG.liveAI){
+    out='[Mode demo] AI live belum diaktifkan. Pertanyaan Anda: "'+t+'". Setelah gateway server terhubung, jawaban analisis akan muncul di sini.';
+  }else{
+    try{
+      const body=buildChatBody(msgs);
+      const r=await fetch(CFG.endpoint,{
+        method:'POST',
+        headers:{'Content-Type':'application/json',Authorization:'Bearer '+currentUser.token},
+        body:JSON.stringify(body),
+        signal:AbortSignal.timeout(25000)
+      });
+      if(r.status===401){
+        out='Sesi Anda berakhir. Silakan masuk kembali.';
+        sessionStorage.removeItem('predicon_access_token');
+        currentUser=null;renderUserArea(null);
+      }else if(r.status===403){
+        // Conversation is no longer accessible (deleted or not owned). Drop the
+        // stale id so the next message starts a fresh, valid conversation.
+        currentConversationId=null;
+        out='Percakapan sebelumnya tidak dapat diakses. Pesan berikutnya akan dimulai sebagai percakapan baru.';
+      }else if(r.status===503){
+        out='AI belum dikonfigurasi di server. Hubungi administrator.';
+      }else if(r.status===502){
+        out='Layanan AI sedang tidak tersedia. Coba lagi sebentar lagi.';
+      }else if(!r.ok){
+        out='Layanan AI sedang tidak tersedia. Coba lagi sebentar lagi.';
+      }else{
+        const data=await r.json();
+        out=data.text;
+        // Track conversation_id for subsequent messages
+        if(data.conversation_id)currentConversationId=data.conversation_id;
+      }
+    }catch(e){
+      out='Koneksi gagal. Periksa jaringan Anda dan coba lagi.';
+    }
+  }
+
+  w.textContent=out;
+  if(out&&!out.startsWith('[')&&out!=='Anda belum masuk.'&&currentUser){
+    msgs.push({role:'assistant',content:out});
+  }
+}
+
+// ─── Routing (preserved from P0, enhanced with auth-aware AI page) ────────
+function route(){
+  const id=(location.hash||'#home').slice(1);
+  const ok=NAV.some(n=>n[0]===id)?id:'home';
+  $('#nav').innerHTML=NAV.map(n=>`<a href="#${n[0]}"${n[0]===ok?' aria-current="page"':''}><span aria-hidden="true">${n[2]}</span>${n[1]}</a>`).join('');
+  $('#view').innerHTML=ok==='home'?home():ok==='ai'?ai():gen(ok);
+  $('#side').classList.remove('open');
+
+  if(ok==='ai'){
+    const form=$('#cf');
+    if(form){
+      form.onsubmit=e=>{e.preventDefault();const v=$('#cq').value.trim();$('#cq').value='';v&&send(v)};
+    }
+    // Load history if logged in
+    if(currentUser){loadHistory()}
+    if(window._pq){send(window._pq);window._pq=null}
+  }
+  if(ok==='home'){
+    $('#ask').onsubmit=e=>{e.preventDefault();const v=$('#aq').value.trim();if(v){window._pq=v;location.hash='#ai'}};
+    document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>location.hash='#'+b.dataset.go);
+    document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tabs button').forEach(x=>x.setAttribute('aria-selected',x===b));$('#mo').innerHTML=mo(b.dataset.t)});
+  }
+}
+
+// ─── Event listeners ─────────────────────────────────────────────────────
+// Delegated click handler for data-action attributes (CSP-compatible —
+// no inline onclick= handlers, which are blocked by nonce-based CSP).
+document.addEventListener('click',(e)=>{
+  const t=e.target.closest('[data-action]');
+  if(!t)return;
+  const action=t.dataset.action;
+  if(action==='logout'){logout(t)}
+  else if(action==='open-auth'){openAuth('login')}
+  else if(action==='close-dlg'){const d=document.getElementById('dlg');if(d)d.close()}
+  else if(action==='switch-tab'){switchAuthTab(t.dataset.tab)}
+});
+addEventListener('hashchange',route);
+$('#burger').onclick=()=>$('#side').classList.toggle('open');
+$('#upg').onclick=()=>$('#dlg').showModal();
 $('#theme').onclick=()=>{const d=document.documentElement;d.dataset.theme=d.dataset.theme==='dark'?'':'dark'};
 addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();$('#q').focus()}});
 $('#q').onkeydown=e=>{if(e.key==='Enter'&&e.target.value.trim()){window._pq=e.target.value.trim();e.target.value='';location.hash==='#ai'?route():location.hash='#ai'}};
+
+// ─── Initialize ──────────────────────────────────────────────────────────
+initAuth().then(()=>route());
 </script>
 </body>
 </html>
